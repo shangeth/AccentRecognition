@@ -18,12 +18,12 @@ if __name__ == "__main__":
 
     parser = ArgumentParser(add_help=True)
     parser.add_argument('--data_csv_path', type=str, default='/home/shangeth/AccentRecognition/AESRC2020TrainData.csv')
-    parser.add_argument('--timit_wav_len', type=int, default=16000*1)
-    parser.add_argument('--batch_size', type=int, default=128)
-    parser.add_argument('--epochs', type=int, default=100)
+    parser.add_argument('--timit_wav_len', type=int, default=16000*4)
+    parser.add_argument('--batch_size', type=int, default=150)
+    parser.add_argument('--epochs', type=int, default=200)
     parser.add_argument('--hidden_size', type=float, default=128)
     parser.add_argument('--gpu', type=int, default="1")
-    parser.add_argument('--n_workers', type=int, default=int(int(Pool()._processes)*0.5))
+    parser.add_argument('--n_workers', type=int, default=int(int(Pool()._processes)*0.75))
     parser.add_argument('--dev', type=str, default=False)
     parser.add_argument('--model_checkpoint', type=str, default=None)
     parser.add_argument('--noise_dataset_path', type=str, default='/home/shangeth/speaker_profiling/noise_datadir/noises')
@@ -49,14 +49,14 @@ if __name__ == "__main__":
 
     # Training, Validation and Testing Dataset
 
-    train_csv_path, val_csv_path = get_temp_train_val(
-        csv_path = hparams.data_csv_path, 
-        val_ratio = 0.1
-        )
+    # train_csv_path, val_csv_path = get_temp_train_val(
+    #     csv_path = hparams.data_csv_path, 
+    #     val_ratio = 0.1
+    #     )
 
     ## Training Dataset
     train_set = AESRCDataset(
-        csv_file = train_csv_path,
+        csv_file = '/home/shangeth/AccentRecognition/AESRC2020TrainData.csv',
         wav_len = HPARAMS['data_wav_len'],
         noise_dataset_path = hparams.noise_dataset_path
     )
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     )
     ## Validation Dataset
     valid_set = AESRCDataset(
-        csv_file = val_csv_path,
+        csv_file = '/home/shangeth/AccentRecognition/AESRC2020ValData.csv',
         wav_len = HPARAMS['data_wav_len'],
         is_train=False
     )
@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
 
     #Training the Model
-    logger = TensorBoardLogger('AESRC_logs', name='')
+    logger = TensorBoardLogger('logs', name='')
     logger.log_hyperparams(HPARAMS)
 
     model = Wav2VecModel(HPARAMS)
@@ -113,7 +113,8 @@ if __name__ == "__main__":
                         max_epochs=hparams.epochs, 
                         checkpoint_callback=checkpoint_callback,
                         logger=logger,
-                        resume_from_checkpoint=hparams.model_checkpoint
+                        resume_from_checkpoint=hparams.model_checkpoint,
+                        # distributed_backend='ddp'
                         )
 
     trainer.fit(model, train_dataloader=trainloader, val_dataloaders=valloader)

@@ -7,6 +7,8 @@ import numpy as np
 import torchaudio
 import wavencoder
 import random
+import warnings
+warnings.simplefilter("ignore", UserWarning)
 
 class AESRCDataset(Dataset):
     def __init__(self,
@@ -45,6 +47,10 @@ class AESRCDataset(Dataset):
         if self.noise_dataset_path:
             self.noise_transform = wavencoder.transforms.AdditiveNoise(self.noise_dataset_path)
 
+        self.spectral_transform = torchaudio.transforms.MelSpectrogram()
+        self.db_transform = torchaudio.transforms.AmplitudeToDB()
+
+
     def __len__(self):
         return len(self.df)
 
@@ -68,4 +74,7 @@ class AESRCDataset(Dataset):
 
         if type(wav).__module__ == np.__name__:
             wav = torch.tensor(wav)
+
+        # wav = self.db_transform(self.spectral_transform(wav)).squeeze(0)
+        # print(wav.max(), wav.min(), wav.mean())
         return wav, label
