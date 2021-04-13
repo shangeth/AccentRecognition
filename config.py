@@ -1,14 +1,14 @@
 class Config(object):
-    dataset_path = '/home/n1900235d/DATASETS/AESRC2020/2020AESRC'
-    data_csv_path = '/home/n1900235d/AccentRecognition/src/Dataset'
-    wav_len = 16000*4
-    batch_size = 150
-    epochs = 200
-    hidden_size = 512
+    dataset_path = '/home/shangeth/DATASET/2020AESRC'
+    data_csv_path = '/home/shangeth/AccentRecognition2/src/Dataset'
+    wav_len = 16000*3
+    batch_size = 200
+    epochs = 100
+    hidden_size = 128
     gpu = '-1'
-    n_workers = 4
+    n_workers = 10
     dev = False
-    model_checkpoint = 'logs/lstm_center_loss/version_0/checkpoints/epoch=149-step=31199.ckpt'
-    noise_dataset_path = '/home/n1900235d/INTERSPEECH/NoiseDataset'
+    model_checkpoint = None
+    noise_dataset_path = '/home/shangeth/AccentRecognition/noise_dataset'
     lr = 1e-3
-    run_name = 'lstm_center_loss'
+    run_name = 'wav2vec-lstm-attn_beforeFinalDenseNoBias'

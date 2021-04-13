@@ -19,9 +19,6 @@ def get_temp_train_val(csv_path, val_ratio=0.1, train_path='temp_train.csv', val
     return train_path, val_path
 
 
-
-
-
 def get_wav_len():
     PATH = '/home/tlntu/Tut/profiling/accent_classification/2020AESRC'
     for type in tqdm(os.listdir(PATH)):

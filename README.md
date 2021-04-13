@@ -44,6 +44,18 @@ python test_aesrc.py --dev=True --data_csv_path='path to final test data csv fil
 
 ## Results
 
+|                           Model                          	| Experiment Run                                                                   	| Test wav length     	| Test Accuracy 	|
+|:--------------------------------------------------------:	|----------------------------------------------------------------------------------	|---------------------	|:-------------:	|
+|                   MFCC_1DCNN_LSTM_Attn                   	| [Wandb Run](https://wandb.ai/shangeth/AccentRecognition?workspace=user-shangeth) 	| 3s                  	|    0.34078    	|
+| Mel_Spectrogram_1DCNN_LSTM_Attn                          	| [Wandb Run](https://wandb.ai/shangeth/AccentRecognition?workspace=user-shangeth) 	| 3s                  	|     0.3751    	|
+|     wav2vec_LSTM_Attn_CenterLoss (center after attn)     	| [Wandb Run](https://wandb.ai/shangeth/AccentRecognition?workspace=user-shangeth) 	| 3s                  	|     0.6123    	|
+|                                                          	|                                                                                  	| 4s                  	|    0.62008    	|
+|                                                          	|                                                                                  	| -1(original length) 	|     0.6279    	|
+| wav2vec_LSTM_Attn_CenterLoss (center before final dense) 	| [Wandb Run](https://wandb.ai/shangeth/AccentRecognition?workspace=user-shangeth) 	| 3s                  	|               	|
+|                                                          	|                                                                                  	| 4s                  	|               	|
+|                                                          	|                                                                                  	| -1(original length) 	|               	|
+
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 

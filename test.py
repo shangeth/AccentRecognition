@@ -5,6 +5,9 @@ import os
 from AESRC.dataset import AESRCDataset
 from AESRC.lightning_model import LightningModel
 
+# from AESRC.dataset import AESRCSpectralDataset as AESRCDataset
+# from AESRC.lightning_model_spectral import LightningModel
+
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import TensorBoardLogger
@@ -64,12 +67,14 @@ if __name__ == "__main__":
         csv_file = os.path.join(hparams.data_csv_path, 'AESRC2020TestData.csv'),
         dataset_path = hparams.dataset_path,
         wav_len = hparams.wav_len,
-        is_train=False
+        is_train=False,
+        is_test = True
     )
     ## Testing Dataloader
     testloader = data.DataLoader(
         test_set, 
-        batch_size=hparams.batch_size, 
+        batch_size=1,
+        # hparams.batch_size, 
         shuffle=False, 
         num_workers=hparams.n_workers
     )

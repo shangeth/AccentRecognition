@@ -7,7 +7,7 @@ from pytorch_lightning.metrics.classification import Accuracy
 
 import numpy as np
 import pandas as pd
-from AESRC.model import Wav2VecClassifier as Model
+from AESRC.model import Wav2VecSpectralClassifier as Model
 import math
 import torch_optimizer
 from AESRC.centerloss import CenterLoss
@@ -26,7 +26,7 @@ class LightningModel(pl.LightningModule):
         self.accuracy = Accuracy()
 
         self.lr = lr
-        self.alpha = 1.0
+        self.alpha = 0.5
         self.lr_cent = 0.5
         self.finetune_lr = 1e-5
 
@@ -43,13 +43,14 @@ class LightningModel(pl.LightningModule):
         return y_hat
 
     def configure_optimizers(self):
-        encoder_params = self.model.encoder.parameters()
+        # encoder_params = self.model.encoder.parameters()
         model_params = self.model.parameters()
-        other_params = [para for para in list(model_params) if para not in list(encoder_params)]
+        other_params = self.model.parameters()
+        # [para for para in list(model_params) if para not in list(encoder_params)]
         center_loss_params = self.center_loss.parameters()
 
         grouped_parameters = [
-            {"params": encoder_params, 'lr': self.finetune_lr},
+            # {"params": encoder_params, 'lr': self.finetune_lr},
             {"params": other_params , 'lr': self.lr},
             {"params": center_loss_params, 'lr': self.lr_cent},
         ]
@@ -71,34 +72,27 @@ class LightningModel(pl.LightningModule):
         loss = classification_loss + self.alpha * center_loss
 
         self.log('train/loss', loss, on_step=False, on_epoch=True, prog_bar=False)
-        self.log('train/cls', classification_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log('train/center', center_loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log('train/cls', classification_loss, on_step=False, on_epoch=True, prog_bar=False)
+        self.log('train/center', center_loss, on_step=False, on_epoch=True, prog_bar=False)
         self.log('train/acc', acc, on_step=False, on_epoch=True, prog_bar=True)
         return {'loss':loss}
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
-        y_hat, _ = self(x)
+        y_hat, attn_output = self(x)
 
         classification_loss = self.classification_criterion(y_hat.float(), y.long())
         loss = classification_loss
         preds = torch.argmax(y_hat, dim=1)
         acc = self.accuracy(preds.long(), y.long())
 
-        return {'val_loss':loss, 
-                'val_acc': acc}
+        self.log('val/loss', loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log('val/acc', acc, on_step=False, on_epoch=True, prog_bar=True)
 
-    def validation_epoch_end(self, outputs):
-        n_batch = len(outputs)
-        val_loss = torch.tensor([x['val_loss'] for x in outputs]).mean()
-        val_acc = torch.tensor([x['val_acc'] for x in outputs]).mean()
-        
-        self.log('val/loss', val_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log('val/acc', val_acc, on_step=False, on_epoch=True, prog_bar=True)
 
     def test_step(self, batch, batch_idx):
         x, y = batch
-        y_hat, _ = self(x)
+        y_hat, attn_output = self(x)
 
         classification_loss = self.classification_criterion(y_hat.float(), y.long())
         loss = classification_loss
