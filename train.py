@@ -10,7 +10,7 @@ from AESRC.lightning_model import LightningModel
 
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.loggers import WandbLogger
+from pytorch_lightning.loggers import WandbLogger, TensorBoardLogger
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 import torch
@@ -85,10 +85,11 @@ if __name__ == "__main__":
 
 
     #Training the Model
-    logger = WandbLogger(
-        name=Config.run_name,
-        project='AccentRecognition'
-    )
+    # logger = WandbLogger(
+    #     name=Config.run_name,
+    #     project='AccentRecognition'
+    # )
+    logger = TensorBoardLogger('logs', name='')
 
     model = LightningModel(hparams.hidden_size, Config.lr)
 
@@ -121,14 +122,3 @@ if __name__ == "__main__":
     model = LightningModel.load_from_checkpoint(checkpoint_callback.best_model_path)
     test_result = trainer.test(model, test_dataloaders=testloader)
 
-    # logger.log_hyperparams(
-    #     # params=dict(
-    #     #     batch_size = hparams.batch_size,
-    #     #     augmentation = 'Random Crop, Additive Noise, Clipping',
-    #     #     optimizer = 'DiffGrad',
-    #     #     lr = Config.lr,
-    #     #     lr_Scheduler = '',
-    #     #     architecture = 'wav2vecNoFinetune-lstm-attn-centerLoss',
-    #     #     hidden_dim = 128
-    #     # ),
-    #     metrics=test_result)
