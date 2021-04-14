@@ -71,14 +71,16 @@ if __name__ == "__main__":
         csv_file = os.path.join(hparams.data_csv_path, 'AESRC2020TestData.csv'),
         dataset_path = hparams.dataset_path,
         wav_len = hparams.wav_len,
-        is_train=False
+        is_train=False,
+        is_test=True
     )
     ## Testing Dataloader
     testloader = data.DataLoader(
         test_set, 
-        batch_size=hparams.batch_size, 
+        batch_size=1,
+        # hparams.batch_size, 
         shuffle=False, 
-        num_workers=hparams.n_workers
+        num_workers=hparams.n_workers,
     )
 
     print('Dataset Split (Train, Validation, Test)=', len(train_set), len(valid_set), len(test_set))

@@ -69,8 +69,7 @@ class AESRCDataset(Dataset):
 
         if self.is_train:
             wav = self.train_transform(wav)
-        else:
-            if not self.is_test:
+        elif not self.is_test:
                 wav = self.test_transform(wav)
         
 
