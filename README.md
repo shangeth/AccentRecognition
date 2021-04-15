@@ -43,6 +43,13 @@ Or you can optionally give as a command line parameters for train and test
 python prepare_aesrc_data.py --path='path to aesrc wav data folder'
 ```
 
+### Logger
+```
+#Change the logger to Tensorboard or Wandb based on your need in train.py
+logger = WandbLogger()
+logger = TensorBoardLogger()
+```
+
 ### Training(Dev Model, to make sure everything is set as expected for training) 
 ```
 python train.py --dev=True 
