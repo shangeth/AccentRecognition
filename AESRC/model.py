@@ -17,12 +17,12 @@ class Wav2VecClassifier(nn.Module):
         lstm_inp = 512
         self.lstm = nn.LSTM(lstm_inp, hidden_size, batch_first=True)
         self.attention = wavencoder.layers.SoftAttention(hidden_size, hidden_size)
-        self.classifier1 = nn.Sequential(
+        self.classifier = nn.Sequential(
             nn.Linear(hidden_size, hidden_size),
             nn.ReLU(),
             nn.Dropout(0.3),
+            nn.Linear(hidden_size, 8)
         )
-        self.classifier2 = nn.Linear(hidden_size, 8, bias=False)
         self.log_softmax = nn.LogSoftmax(1)
 
 
@@ -31,11 +31,9 @@ class Wav2VecClassifier(nn.Module):
         x = self.encoder(x)
         x, (hidden, _) = self.lstm(x.transpose(1,2))
         attn_output = self.attention(x)
-        accent = self.classifier1(attn_output)
-        center_tensors = accent
-        accent = self.classifier2(attn_output)
+        accent = self.classifier(attn_output)
         accent = self.log_softmax(accent.view(batch_size, -1)).view(batch_size, -1)
-        return accent, center_tensors
+        return accent, attn_output
 
 # class Wav2VecClassifier(nn.Module):
 #     def __init__(self, hidden_size=128):

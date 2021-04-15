@@ -70,6 +70,9 @@ python test.py
 |                                                          	|                                                                                  	| 4s              	|    0.62008    	|
 |                                                          	|                                                                                  	| -1              	|     0.6279    	|
 | wav2vec_LSTM_Attn_CenterLoss (center before final dense) 	| [Wandb Run](https://wandb.ai/shangeth/AccentRecognition?workspace=user-shangeth) 	| -1              	|     0.6161    	|
+| wav2vec_LSTM_Attn_Centerloss_256 (center after Attn)     	| [Wandb Run](https://wandb.ai/shangeth/AccentRecognition?workspace=user-shangeth) 	| -1              	| 0.6622        	|
+
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 Please make sure to update tests as appropriate.

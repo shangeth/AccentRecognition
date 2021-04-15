@@ -87,11 +87,11 @@ if __name__ == "__main__":
 
 
     #Training the Model
-    # logger = WandbLogger(
-    #     name=Config.run_name,
-    #     project='AccentRecognition'
-    # )
-    logger = TensorBoardLogger('logs', name='')
+    logger = WandbLogger(
+        name=Config.run_name,
+        project='AccentRecognition'
+    )
+    # logger = TensorBoardLogger('logs', name='')
 
     model = LightningModel(hparams.hidden_size, Config.lr)
 

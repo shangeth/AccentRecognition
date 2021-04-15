@@ -10,11 +10,12 @@ class Config(object):
     wav_len = 16000*3
     batch_size = 200
     epochs = 100
-    hidden_size = 128
+    hidden_size = 256
     gpu = '-1'
     n_workers = 10
     dev = False
     model_checkpoint = None
+    # '/home/shangeth/AccentRecognition2/AccentRecognition/3kls7j0p/checkpoints/epoch=84.ckpt' - 67%
     noise_dataset_path = '/home/shangeth/AccentRecognition/noise_dataset'
     lr = 1e-3
     run_name = 'wav2vec-lstm-attn_beforeFinalDenseNoBias'
